@@ -1,14 +1,16 @@
 package com.medic.mediscreen.service;
 
-import com.medic.mediscreen.domain.Patient;
-import com.medic.mediscreen.repositories.MicroService_mediscreen_patient;
-import com.medic.mediscreen.repositories.Patient_Repository;
+import com.medic.mediscreen.domain.PatHistory;
+import com.medic.mediscreen.domain.PatInfo;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.util.*;
 
 /**
  * classic CRUD methods in order to managing de Patient table in the database
@@ -18,33 +20,69 @@ import java.util.Optional;
 @Slf4j
 public class PatientService {
 
+    private Set<String> termList;
 
-    @Autowired
-    protected Patient_Repository patient_repository;
-
-    public void addAPatient(Patient patient) {
-        patient_repository.save(patient);
+    void patienService(@Value("termesDeclencheurs") String terms) {
+        termList = new HashSet<>(Arrays.asList(terms.split(",")));
     }
 
-    public Patient getAPatient(int patId) {
-        return patient_repository.findByPatId(patId).get();
-    }
+    public String getAssessment(PatInfo patInfo) {
+        int occurences = getOccurrences(patInfo.getPatHistoryList());
+        int age = getAge(patInfo.getPatient().getDob());
+        char sex = patInfo.getPatient().getSex();
+        String assess;
 
-    public List<Patient> getPatients() {
-        return patient_repository.findAll();
-    }
-
-    public void setAPatient(Patient newpatient) {
-        if (patient_repository.findByPatId(newpatient.getPatId()).isPresent()) {
-            patient_repository.save(newpatient);
+        if (occurences <2) {
+            assess = "None";
         }
-    }
-
-
-    public void deleteAPatient(int patientId) {
-        Optional<Patient> patient = patient_repository.findByPatId(patientId);
-        if (patient.isPresent()) {
-            patient_repository.delete(patient.get());
+        else if (occurences <3 && age >30){
+            assess = "Borderline";
         }
+        else if (occurences < 5 && age <=30 && sex=='M'){
+            assess = "In Danger";
+        }
+        else if (occurences < 7 && age <=30 && sex=='S'){
+            assess = "In Danger";
+        }
+        else if (occurences < 8 && age >30){
+            assess = "In Danger";
+        }
+        else {
+            assess = "Early onset";
+        }
+
+            return "Patient: Test "
+                    + patInfo.getPatient().getFamily()
+                    + " (age "
+                    + age
+                    + ") diabetes assessment is: "
+                    + assess;
     }
+
+    private int getOccurrences(List<PatHistory> patHistoryList) {
+        String allHistory = null;
+        for (PatHistory patHistory : patHistoryList) {
+            allHistory += patHistory.toString() + " ";
+        }
+        Map<String, Integer> resultfreq = new HashMap<>();
+        List<String> wordList = Arrays.asList(allHistory.split(" "));
+        for (String a : wordList) {
+            Integer freq = resultfreq.get(a);
+            resultfreq.put(a.toLowerCase(), (freq == null) ? 1 : freq + 1);
+        }
+        int occurences = 0;
+        for (String term : termList) {
+            occurences += resultfreq.get(term);
+        }
+        return occurences;
+    }
+
+    private int getAge(Date dob) {
+        LocalDate localDob = Instant.ofEpochMilli(dob.getTime())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        return Period.between(localDob, LocalDate.now()).getYears();
+    }
+
+
 }
