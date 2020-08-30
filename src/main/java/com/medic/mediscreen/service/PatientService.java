@@ -22,7 +22,7 @@ public class PatientService {
 
     private Set<String> termList;
 
-    void patienService(@Value("termesDeclencheurs") String terms) {
+    public PatientService(@Value("termesDeclencheurs") String terms) {
         termList = new HashSet<>(Arrays.asList(terms.split(",")));
     }
 
@@ -64,15 +64,15 @@ public class PatientService {
         for (PatHistory patHistory : patHistoryList) {
             allHistory += patHistory.toString() + " ";
         }
-        Map<String, Integer> resultfreq = new HashMap<>();
+        Map<String, Integer> allWordOccurrences = new HashMap<>();
         List<String> wordList = Arrays.asList(allHistory.split(" "));
         for (String a : wordList) {
-            Integer freq = resultfreq.get(a);
-            resultfreq.put(a.toLowerCase(), (freq == null) ? 1 : freq + 1);
+            Integer freq = allWordOccurrences.get(a);
+            allWordOccurrences.put(a.toLowerCase(), (freq == null) ? 1 : freq + 1);
         }
         int occurences = 0;
         for (String term : termList) {
-            occurences += resultfreq.get(term);
+            occurences += allWordOccurrences.get(term.toLowerCase());
         }
         return occurences;
     }
