@@ -10,10 +10,10 @@
     </parent>
 
     <groupId>com.medic</groupId>
-    <artifactId>mediscreen</artifactId>
+    <artifactId>mediscreen_Risk</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>mediscreen</name>
-    <description>application for medical purposes</description>
+    <name>mediscreen_Risk</name>
+    <description>application for medical purposes (microservice assessment, wich calculate the risk according to the patient history)</description>
 
     <properties>
         <java.version>13</java.version>
