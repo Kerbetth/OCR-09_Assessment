@@ -1,7 +1,7 @@
 package com.medic.mediscreen.service;
 
 import com.medic.mediscreen.domain.PatHistory;
-import com.medic.mediscreen.domain.PatInfo;
+import com.medic.mediscreen.domain.Patient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,18 +18,18 @@ import java.util.*;
 
 @Service
 @Slf4j
-public class PatientService {
+public class AssessmentService {
 
     private Set<String> termList;
 
-    public PatientService(@Value("termesDeclencheurs") String terms) {
+    public AssessmentService(@Value("termesDeclencheurs") String terms) {
         termList = new HashSet<>(Arrays.asList(terms.split(",")));
     }
 
-    public String getAssessment(PatInfo patInfo) {
-        int occurences = getOccurrences(patInfo.getPatHistoryList());
-        int age = getAge(patInfo.getPatient().getDob());
-        char sex = patInfo.getPatient().getSex();
+    public String getAssessment(Patient patient) {
+        int occurences = getOccurrences(patient.getPatHistories());
+        int age = getAge(patient.getDob());
+        char sex = patient.getSex();
         String assess;
 
         if (occurences <2) {
@@ -52,14 +52,14 @@ public class PatientService {
         }
 
             return "Patient: Test "
-                    + patInfo.getPatient().getFamily()
+                    + patient.getFamily()
                     + " (age "
                     + age
                     + ") diabetes assessment is: "
                     + assess;
     }
 
-    private int getOccurrences(List<PatHistory> patHistoryList) {
+    private int getOccurrences(Set<PatHistory> patHistoryList) {
         String allHistory = null;
         for (PatHistory patHistory : patHistoryList) {
             allHistory += patHistory.toString() + " ";
