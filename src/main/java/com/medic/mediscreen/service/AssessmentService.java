@@ -36,7 +36,7 @@ public class AssessmentService {
             assess = "Borderline";
         } else if (occurences < 5 && age <= 30 && sex == 'M') {
             assess = "In Danger";
-        } else if (occurences < 7 && age <= 30 && sex == 'S') {
+        } else if (occurences < 7 && age <= 30 && sex == 'F') {
             assess = "In Danger";
         } else if (occurences < 8 && age > 30) {
             assess = "In Danger";
@@ -54,7 +54,7 @@ public class AssessmentService {
     }
 
     private int getOccurrences(List<String> notes) {
-        String allHistory = null;
+        String allHistory = "";
         for (String patHistory : notes) {
             allHistory += patHistory + " ";
         }
@@ -68,7 +68,6 @@ public class AssessmentService {
         int occurences = 0;
         for (String term : termList) {
             if (allWordOccurrences.keySet().contains(term)) {
-                System.out.println(allWordOccurrences.toString());
                 occurences += allWordOccurrences.get(term.toLowerCase());
             }
         }
