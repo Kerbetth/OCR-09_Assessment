@@ -1,8 +1,7 @@
 package com.medic.mediscreen.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.medic.mediscreen.domain.PatHistory;
-import com.medic.mediscreen.domain.Patient;
+import com.medic.mediscreen.dto.AssessInfo;
 import com.medic.mediscreen.service.AssessmentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,13 +12,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -33,26 +34,23 @@ public class AssessmentController {
 	@Autowired
 	MockMvc mockMvc;
 
-
-    Set<PatHistory> patHistories =new HashSet<>();
-    PatHistory patHistory = new PatHistory();
     ObjectMapper objectMapper = new ObjectMapper();
+    AssessInfo assessInfo;
+    List<String> notes = new ArrayList<>();
 
     @BeforeEach
     void setup() {
-        patHistory.setId(1);
-        patHistory.setNote("a note");
-	patHistories.add(new PatHistory());
+        notes.add("a note");
+        notes.add("another note");
+        assessInfo = new AssessInfo("family", "1998-10-05",'M',notes);
     }
 
     @Test
     public void getAssess() throws Exception {
-        Patient patient = new Patient();
-        patient.setPatHistories(patHistories);
-        when(assessmentService.getAssessment(patient)).thenReturn("this String");
-       String result= mockMvc.perform(get("/patHistory")
+        when(assessmentService.getAssessment(any())).thenReturn("this String");
+       String result= mockMvc.perform(post("/assess")
+               .content(objectMapper.writeValueAsString(assessInfo))
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("id","1")
         )
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
