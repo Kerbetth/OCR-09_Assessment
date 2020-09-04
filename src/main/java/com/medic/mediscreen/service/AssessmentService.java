@@ -27,34 +27,30 @@ public class AssessmentService {
     public String getAssessment(AssessInfo assessInfo) {
         int occurences = getOccurrences(assessInfo.getNotes());
         int age = getAge(assessInfo.getDob());
-        char sex =assessInfo.getSex();
+        char sex = assessInfo.getSex();
         String assess;
 
-        if (occurences <2) {
+        if (occurences < 2) {
             assess = "None";
-        }
-        else if (occurences <3 && age >30){
+        } else if (occurences < 3 && age > 30) {
             assess = "Borderline";
-        }
-        else if (occurences < 5 && age <=30 && sex=='M'){
+        } else if (occurences < 5 && age <= 30 && sex == 'M') {
             assess = "In Danger";
-        }
-        else if (occurences < 7 && age <=30 && sex=='S'){
+        } else if (occurences < 7 && age <= 30 && sex == 'S') {
             assess = "In Danger";
-        }
-        else if (occurences < 8 && age >30){
+        } else if (occurences < 8 && age > 30) {
             assess = "In Danger";
-        }
-        else {
+        } else {
             assess = "Early onset";
         }
-
-            return "Patient: Test "
-                    + assessInfo.getFamily()
-                    + " (age "
-                    + age
-                    + ") diabetes assessment is: "
-                    + assess;
+        String result = "Patient: Test "
+                + assessInfo.getFamily()
+                + " (age "
+                + age
+                + ") diabetes assessment is: "
+                + assess;
+        log.info("New assessment generated: " + result);
+        return result;
     }
 
     private int getOccurrences(List<String> notes) {
@@ -71,7 +67,7 @@ public class AssessmentService {
 
         int occurences = 0;
         for (String term : termList) {
-            if(allWordOccurrences.keySet().contains(term)) {
+            if (allWordOccurrences.keySet().contains(term)) {
                 System.out.println(allWordOccurrences.toString());
                 occurences += allWordOccurrences.get(term.toLowerCase());
             }
