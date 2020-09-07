@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-public class controllers {
+public class Controllers {
 
     @Autowired
     AssessmentService assessmentService;
