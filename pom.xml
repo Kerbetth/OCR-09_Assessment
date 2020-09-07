@@ -10,8 +10,8 @@
     </parent>
 
     <groupId>com.medic</groupId>
-    <artifactId>mediscreen_Risk</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>mediscreen_assess</artifactId>
+    <version>1</version>
     <name>mediscreen_Assessment</name>
     <description>application for medical purposes (microservice assessment, wich calculate the risk according to the patient history)</description>
 

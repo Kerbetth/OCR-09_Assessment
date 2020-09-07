@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureMockMvc(addFilters = false)
-public class AssessmentControllerIT {
+public class AssessmentControllerITest {
 
 
     @Autowired
@@ -34,6 +34,7 @@ public class AssessmentControllerIT {
 
     @BeforeEach
     void setup() {
+        notes.clear();
         notes.add("a note");
         notes.add("another note");
         assessInfo = new AssessInfo("family", "1998-10-05",'M',notes);
@@ -51,8 +52,8 @@ public class AssessmentControllerIT {
         assertThat(result).contains("None");
     }
     @Test
-    public void getAssessBorderline() throws Exception {
-        assessInfo.getNotes().add("réaction,anticorps");
+    public void getAssessInDanger2() throws Exception {
+        assessInfo.getNotes().add("vertige,rechute,réaction,anticorps");
         String result = mockMvc.perform(post("/assess")
                 .content(objectMapper.writeValueAsString(assessInfo))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -63,13 +64,25 @@ public class AssessmentControllerIT {
 
     @Test
     public void getAssessInDanger() throws Exception {
-        assessInfo.getNotes().add("vertige,rechute,réaction,anticorps");
+        assessInfo.getNotes().add("vertige,rechute,réaction,anticorps,réaction,anticorps");
         String result = mockMvc.perform(post("/assess")
                 .content(objectMapper.writeValueAsString(assessInfo))
                 .contentType(MediaType.APPLICATION_JSON)
         )
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertThat(result).contains("In Danger");
+    }
+
+    @Test
+    public void getAssessBorderline() throws Exception {
+        assessInfo.setDob("1970-08-08");
+        assessInfo.getNotes().add("vertige,rechute");
+        String result = mockMvc.perform(post("/assess")
+                .content(objectMapper.writeValueAsString(assessInfo))
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        assertThat(result).contains("Borderline");
     }
 
     @Test
