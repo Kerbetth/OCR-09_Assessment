@@ -1,4 +1,4 @@
 FROM openjdk:14
-ADD build/libs/medi-assessment.jar medi-assessment.jar
+ADD target/mediscreen_assess-1.jar mediscreen_assess-1.jar
 EXPOSE 8083
-ENTRYPOINT ["java", "-jar", "medi-assessment.jar"]
+ENTRYPOINT ["java", "-jar", "mediscreen_assess-1.jar"]

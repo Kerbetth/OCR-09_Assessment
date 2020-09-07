@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureMockMvc(addFilters = false)
-public class AssessmentController {
+public class AssessmentControllerTest {
 
     @MockBean
     private AssessmentService  assessmentService;
