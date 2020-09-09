@@ -1,0 +1,4 @@
+com\medic\mediscreen\controllers\Controllers.class
+com\medic\mediscreen\service\AssessmentService.class
+com\medic\mediscreen\dto\AssessInfo.class
+com\medic\mediscreen\MediscreenAssessmentApplication.class

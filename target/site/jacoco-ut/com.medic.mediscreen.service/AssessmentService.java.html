@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AssessmentService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mediscreen_Assessment</a> &gt; <a href="index.source.html" class="el_package">com.medic.mediscreen.service</a> &gt; <span class="el_source">AssessmentService.java</span></div><h1>AssessmentService.java</h1><pre class="source lang-java linenums">package com.medic.mediscreen.service;
+
+import com.medic.mediscreen.dto.AssessInfo;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
+/**
+ * classic CRUD methods in order to managing de Patient table in the database
+ */
+
+@Service
+<span class="fc" id="L18">@Slf4j</span>
+public class AssessmentService {
+
+    private Set&lt;String&gt; termList;
+
+<span class="fc" id="L23">    public AssessmentService(@Value(&quot;${termesDeclencheurs}&quot;) String terms) {</span>
+<span class="fc" id="L24">        termList = new HashSet&lt;&gt;(Arrays.asList(terms.split(&quot;,&quot;)));</span>
+<span class="fc" id="L25">    }</span>
+
+    public String getAssessment(AssessInfo assessInfo) {
+<span class="fc" id="L28">        int occurences = getOccurrences(assessInfo.getNotes());</span>
+<span class="fc" id="L29">        int age = getAge(assessInfo.getDob());</span>
+<span class="fc" id="L30">        char sex = assessInfo.getSex();</span>
+        String assess;
+
+<span class="fc bfc" id="L33" title="All 2 branches covered.">        if (occurences &lt; 2) {</span>
+<span class="fc" id="L34">            assess = &quot;None&quot;;</span>
+<span class="pc bpc" id="L35" title="1 of 4 branches missed.">        } else if (occurences &lt; 3 &amp;&amp; age &gt; 30) {</span>
+<span class="fc" id="L36">            assess = &quot;Borderline&quot;;</span>
+<span class="pc bpc" id="L37" title="2 of 6 branches missed.">        } else if (occurences &lt; 5 &amp;&amp; age &lt;= 30 &amp;&amp; sex == 'M') {</span>
+<span class="fc" id="L38">            assess = &quot;In Danger&quot;;</span>
+<span class="pc bpc" id="L39" title="3 of 6 branches missed.">        } else if (occurences &lt; 7 &amp;&amp; age &lt;= 30 &amp;&amp; sex == 'F') {</span>
+<span class="nc" id="L40">            assess = &quot;In Danger&quot;;</span>
+<span class="pc bpc" id="L41" title="2 of 4 branches missed.">        } else if (occurences &lt; 8 &amp;&amp; age &gt; 30) {</span>
+<span class="nc" id="L42">            assess = &quot;In Danger&quot;;</span>
+        } else {
+<span class="fc" id="L44">            assess = &quot;Early onset&quot;;</span>
+        }
+<span class="fc" id="L46">        String result = &quot;Patient: Test &quot;</span>
+<span class="fc" id="L47">                + assessInfo.getFamily()</span>
+                + &quot; (age &quot;
+                + age
+                + &quot;) diabetes assessment is: &quot;
+                + assess;
+<span class="fc" id="L52">        log.info(&quot;New assessment generated: &quot; + result);</span>
+<span class="fc" id="L53">        return result;</span>
+    }
+
+    private int getOccurrences(List&lt;String&gt; notes) {
+<span class="fc" id="L57">        String allHistory = &quot;&quot;;</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        for (String patHistory : notes) {</span>
+<span class="fc" id="L59">            allHistory += patHistory + &quot; &quot;;</span>
+<span class="fc" id="L60">        }</span>
+<span class="fc" id="L61">        Map&lt;String, Integer&gt; allWordOccurrences = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L62">        List&lt;String&gt; wordList = Arrays.asList(allHistory.replaceAll(&quot;,&quot;, &quot; &quot;).split(&quot; &quot;));</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        for (String a : wordList) {</span>
+<span class="fc" id="L64">            Integer freq = allWordOccurrences.get(a);</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">            allWordOccurrences.put(a.toLowerCase(), (freq == null) ? 1 : freq + 1);</span>
+<span class="fc" id="L66">        }</span>
+
+<span class="fc" id="L68">        int occurences = 0;</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        for (String term : termList) {</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">            if (allWordOccurrences.keySet().contains(term)) {</span>
+<span class="fc" id="L71">                occurences += allWordOccurrences.get(term.toLowerCase());</span>
+            }
+<span class="fc" id="L73">        }</span>
+<span class="fc" id="L74">        return occurences;</span>
+    }
+
+    private int getAge(String dob) {
+<span class="fc" id="L78">        LocalDate localDate = LocalDate.parse(dob, DateTimeFormatter.ISO_LOCAL_DATE);</span>
+<span class="fc" id="L79">        return Period.between(localDate, LocalDate.now()).getYears();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
