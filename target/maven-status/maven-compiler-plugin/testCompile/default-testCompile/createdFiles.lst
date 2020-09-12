@@ -1,3 +1,3 @@
-com\medic\mediscreen\integration\AssessmentControllerITest.class
 com\medic\mediscreen\unit\AssessmentControllerTest.class
 com\medic\mediscreen\unit\AssessmentServiceTest.class
+com\medic\mediscreen\integration\AssessmentControllerITest.class
