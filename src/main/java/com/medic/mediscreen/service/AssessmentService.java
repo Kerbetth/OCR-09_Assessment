@@ -32,7 +32,11 @@ public class AssessmentService {
 
         if (occurences < 2) {
             assess = "None";
-        } else if (occurences < 3 && age > 30) {
+        } else if (occurences < 6 && age > 30) {
+            assess = "Borderline";
+        } else if (occurences < 3 && age <= 30) {
+            assess = "Borderline";
+        } else if (occurences < 4 && age <= 30) {
             assess = "Borderline";
         } else if (occurences < 5 && age <= 30 && sex == 'M') {
             assess = "In Danger";
@@ -55,23 +59,26 @@ public class AssessmentService {
 
     private int getOccurrences(List<String> notes) {
         String allHistory = "";
-        for (String patHistory : notes) {
-            allHistory += patHistory + " ";
-        }
-        Map<String, Integer> allWordOccurrences = new HashMap<>();
-        List<String> wordList = Arrays.asList(allHistory.replaceAll(",", " ").split(" "));
-        for (String a : wordList) {
-            Integer freq = allWordOccurrences.get(a);
-            allWordOccurrences.put(a.toLowerCase(), (freq == null) ? 1 : freq + 1);
-        }
-
-        int occurences = 0;
-        for (String term : termList) {
-            if (allWordOccurrences.keySet().contains(term)) {
-                occurences += allWordOccurrences.get(term.toLowerCase());
+        if (notes!=null) {
+            for (String patHistory : notes) {
+                allHistory += patHistory + " ";
             }
+            Map<String, Integer> allWordOccurrences = new HashMap<>();
+            List<String> wordList = Arrays.asList(allHistory.replaceAll(",", " ").split(" "));
+            for (String a : wordList) {
+                Integer freq = allWordOccurrences.get(a);
+                allWordOccurrences.put(a.toLowerCase(), (freq == null) ? 1 : freq + 1);
+            }
+
+            int occurences = 0;
+            for (String term : termList) {
+                if (allWordOccurrences.keySet().contains(term)) {
+                    occurences += allWordOccurrences.get(term.toLowerCase());
+                }
+            }
+            return occurences;
         }
-        return occurences;
+        return 0;
     }
 
     private int getAge(String dob) {

@@ -32,51 +32,58 @@ public class AssessmentService {
 
 <span class="fc bfc" id="L33" title="All 2 branches covered.">        if (occurences &lt; 2) {</span>
 <span class="fc" id="L34">            assess = &quot;None&quot;;</span>
-<span class="pc bpc" id="L35" title="1 of 4 branches missed.">        } else if (occurences &lt; 3 &amp;&amp; age &gt; 30) {</span>
+<span class="pc bpc" id="L35" title="1 of 4 branches missed.">        } else if (occurences &lt; 6 &amp;&amp; age &gt; 30) {</span>
 <span class="fc" id="L36">            assess = &quot;Borderline&quot;;</span>
-<span class="pc bpc" id="L37" title="2 of 6 branches missed.">        } else if (occurences &lt; 5 &amp;&amp; age &lt;= 30 &amp;&amp; sex == 'M') {</span>
-<span class="fc" id="L38">            assess = &quot;In Danger&quot;;</span>
-<span class="pc bpc" id="L39" title="3 of 6 branches missed.">        } else if (occurences &lt; 7 &amp;&amp; age &lt;= 30 &amp;&amp; sex == 'F') {</span>
-<span class="nc" id="L40">            assess = &quot;In Danger&quot;;</span>
-<span class="pc bpc" id="L41" title="2 of 4 branches missed.">        } else if (occurences &lt; 8 &amp;&amp; age &gt; 30) {</span>
-<span class="nc" id="L42">            assess = &quot;In Danger&quot;;</span>
+<span class="pc bpc" id="L37" title="3 of 4 branches missed.">        } else if (occurences &lt; 3 &amp;&amp; age &lt;= 30) {</span>
+<span class="nc" id="L38">            assess = &quot;Borderline&quot;;</span>
+<span class="pc bpc" id="L39" title="1 of 4 branches missed.">        } else if (occurences &lt; 4 &amp;&amp; age &lt;= 30) {</span>
+<span class="fc" id="L40">            assess = &quot;Borderline&quot;;</span>
+<span class="pc bpc" id="L41" title="2 of 6 branches missed.">        } else if (occurences &lt; 5 &amp;&amp; age &lt;= 30 &amp;&amp; sex == 'M') {</span>
+<span class="fc" id="L42">            assess = &quot;In Danger&quot;;</span>
+<span class="pc bpc" id="L43" title="3 of 6 branches missed.">        } else if (occurences &lt; 7 &amp;&amp; age &lt;= 30 &amp;&amp; sex == 'F') {</span>
+<span class="nc" id="L44">            assess = &quot;In Danger&quot;;</span>
+<span class="pc bpc" id="L45" title="2 of 4 branches missed.">        } else if (occurences &lt; 8 &amp;&amp; age &gt; 30) {</span>
+<span class="nc" id="L46">            assess = &quot;In Danger&quot;;</span>
         } else {
-<span class="fc" id="L44">            assess = &quot;Early onset&quot;;</span>
+<span class="fc" id="L48">            assess = &quot;Early onset&quot;;</span>
         }
-<span class="fc" id="L46">        String result = &quot;Patient: Test &quot;</span>
-<span class="fc" id="L47">                + assessInfo.getFamily()</span>
+<span class="fc" id="L50">        String result = &quot;Patient: Test &quot;</span>
+<span class="fc" id="L51">                + assessInfo.getFamily()</span>
                 + &quot; (age &quot;
                 + age
                 + &quot;) diabetes assessment is: &quot;
                 + assess;
-<span class="fc" id="L52">        log.info(&quot;New assessment generated: &quot; + result);</span>
-<span class="fc" id="L53">        return result;</span>
+<span class="fc" id="L56">        log.info(&quot;New assessment generated: &quot; + result);</span>
+<span class="fc" id="L57">        return result;</span>
     }
 
     private int getOccurrences(List&lt;String&gt; notes) {
-<span class="fc" id="L57">        String allHistory = &quot;&quot;;</span>
-<span class="fc bfc" id="L58" title="All 2 branches covered.">        for (String patHistory : notes) {</span>
-<span class="fc" id="L59">            allHistory += patHistory + &quot; &quot;;</span>
-<span class="fc" id="L60">        }</span>
-<span class="fc" id="L61">        Map&lt;String, Integer&gt; allWordOccurrences = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L62">        List&lt;String&gt; wordList = Arrays.asList(allHistory.replaceAll(&quot;,&quot;, &quot; &quot;).split(&quot; &quot;));</span>
-<span class="fc bfc" id="L63" title="All 2 branches covered.">        for (String a : wordList) {</span>
-<span class="fc" id="L64">            Integer freq = allWordOccurrences.get(a);</span>
-<span class="fc bfc" id="L65" title="All 2 branches covered.">            allWordOccurrences.put(a.toLowerCase(), (freq == null) ? 1 : freq + 1);</span>
-<span class="fc" id="L66">        }</span>
+<span class="fc" id="L61">        String allHistory = &quot;&quot;;</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        if (notes!=null) {</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">            for (String patHistory : notes) {</span>
+<span class="fc" id="L64">                allHistory += patHistory + &quot; &quot;;</span>
+<span class="fc" id="L65">            }</span>
+<span class="fc" id="L66">            Map&lt;String, Integer&gt; allWordOccurrences = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L67">            List&lt;String&gt; wordList = Arrays.asList(allHistory.replaceAll(&quot;,&quot;, &quot; &quot;).split(&quot; &quot;));</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">            for (String a : wordList) {</span>
+<span class="fc" id="L69">                Integer freq = allWordOccurrences.get(a);</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">                allWordOccurrences.put(a.toLowerCase(), (freq == null) ? 1 : freq + 1);</span>
+<span class="fc" id="L71">            }</span>
 
-<span class="fc" id="L68">        int occurences = 0;</span>
-<span class="fc bfc" id="L69" title="All 2 branches covered.">        for (String term : termList) {</span>
-<span class="fc bfc" id="L70" title="All 2 branches covered.">            if (allWordOccurrences.keySet().contains(term)) {</span>
-<span class="fc" id="L71">                occurences += allWordOccurrences.get(term.toLowerCase());</span>
-            }
-<span class="fc" id="L73">        }</span>
-<span class="fc" id="L74">        return occurences;</span>
+<span class="fc" id="L73">            int occurences = 0;</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">            for (String term : termList) {</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">                if (allWordOccurrences.keySet().contains(term)) {</span>
+<span class="fc" id="L76">                    occurences += allWordOccurrences.get(term.toLowerCase());</span>
+                }
+<span class="fc" id="L78">            }</span>
+<span class="fc" id="L79">            return occurences;</span>
+        }
+<span class="nc" id="L81">        return 0;</span>
     }
 
     private int getAge(String dob) {
-<span class="fc" id="L78">        LocalDate localDate = LocalDate.parse(dob, DateTimeFormatter.ISO_LOCAL_DATE);</span>
-<span class="fc" id="L79">        return Period.between(localDate, LocalDate.now()).getYears();</span>
+<span class="fc" id="L85">        LocalDate localDate = LocalDate.parse(dob, DateTimeFormatter.ISO_LOCAL_DATE);</span>
+<span class="fc" id="L86">        return Period.between(localDate, LocalDate.now()).getYears();</span>
     }
 
 }
