@@ -59,23 +59,26 @@ public class AssessmentService {
 
     private int getOccurrences(List<String> notes) {
         String allHistory = "";
-        for (String patHistory : notes) {
-            allHistory += patHistory + " ";
-        }
-        Map<String, Integer> allWordOccurrences = new HashMap<>();
-        List<String> wordList = Arrays.asList(allHistory.replaceAll(",", " ").split(" "));
-        for (String a : wordList) {
-            Integer freq = allWordOccurrences.get(a);
-            allWordOccurrences.put(a.toLowerCase(), (freq == null) ? 1 : freq + 1);
-        }
-
-        int occurences = 0;
-        for (String term : termList) {
-            if (allWordOccurrences.keySet().contains(term)) {
-                occurences += allWordOccurrences.get(term.toLowerCase());
+        if (notes!=null) {
+            for (String patHistory : notes) {
+                allHistory += patHistory + " ";
             }
+            Map<String, Integer> allWordOccurrences = new HashMap<>();
+            List<String> wordList = Arrays.asList(allHistory.replaceAll(",", " ").split(" "));
+            for (String a : wordList) {
+                Integer freq = allWordOccurrences.get(a);
+                allWordOccurrences.put(a.toLowerCase(), (freq == null) ? 1 : freq + 1);
+            }
+
+            int occurences = 0;
+            for (String term : termList) {
+                if (allWordOccurrences.keySet().contains(term)) {
+                    occurences += allWordOccurrences.get(term.toLowerCase());
+                }
+            }
+            return occurences;
         }
-        return occurences;
+        return 0;
     }
 
     private int getAge(String dob) {
