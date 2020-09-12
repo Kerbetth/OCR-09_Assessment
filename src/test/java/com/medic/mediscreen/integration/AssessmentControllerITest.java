@@ -52,14 +52,14 @@ public class AssessmentControllerITest {
         assertThat(result).contains("None");
     }
     @Test
-    public void getAssessInDanger2() throws Exception {
+    public void getAssessBorderline2() throws Exception {
         assessInfo.getNotes().add("vertige,rechute,réaction,anticorps");
         String result = mockMvc.perform(post("/assess")
                 .content(objectMapper.writeValueAsString(assessInfo))
                 .contentType(MediaType.APPLICATION_JSON)
         )
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        assertThat(result).contains("In Danger");
+        assertThat(result).contains("Borderline");
     }
 
     @Test

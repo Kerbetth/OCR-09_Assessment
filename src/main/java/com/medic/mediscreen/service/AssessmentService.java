@@ -32,7 +32,11 @@ public class AssessmentService {
 
         if (occurences < 2) {
             assess = "None";
-        } else if (occurences < 3 && age > 30) {
+        } else if (occurences < 6 && age > 30) {
+            assess = "Borderline";
+        } else if (occurences < 3 && age <= 30) {
+            assess = "Borderline";
+        } else if (occurences < 4 && age <= 30) {
             assess = "Borderline";
         } else if (occurences < 5 && age <= 30 && sex == 'M') {
             assess = "In Danger";
